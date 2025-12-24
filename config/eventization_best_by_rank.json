@@ -1,0 +1,14 @@
+{
+  "ema_span": 2,
+  "on_thr": 0.82557,
+  "off_thr": 0.70557,
+  "k": 4,
+  "m": 7,
+  "min_dur_s": 120,
+  "refractory_s": 60,
+  "far_per_hr": 0.0,
+  "delay_s": null,
+  "precision": null,
+  "recall": 0.0,
+  "alerts": 0
+}

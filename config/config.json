@@ -1,0 +1,38 @@
+{
+  "problem": "Beam Handover Anomalies (inferred beam_id from MODEM OUT clustering)",
+  "resample": "10s",
+  "beam_inference": {
+    "pca_dim": 6,
+    "kmeans_k": 2,
+    "flicker_smoothing_s": 60
+  },
+  "handover_rules": {
+    "drop_pct_thr": 0.041967432986525284,
+    "pingpong_s": 300.0,
+    "recovery_s_thr": 45.0
+  },
+  "thresholding": {
+    "target_precision": 0.85,
+    "tau_val": 0.945569634437561,
+    "validation_ap": 0.10509562904718159,
+    "early_warning_min": 2
+  },
+  "eventization": {
+    "ema_span": 4,
+    "on_thr": 0.79557,
+    "off_thr": 0.67557,
+    "k": 3,
+    "m": 5,
+    "min_dur_s": 120,
+    "refractory_s": 60
+  },
+  "metrics_test": {
+    "far_per_hr": 0.01,
+    "median_delay_s": 84655.0,
+    "median_lead_s": 215285.0,
+    "event_precision": 0.5,
+    "event_recall": 0.012,
+    "pred_events": 2,
+    "gt_events": 84
+  }
+}
