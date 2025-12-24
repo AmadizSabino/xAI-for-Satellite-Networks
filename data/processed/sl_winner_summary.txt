@@ -1,0 +1,1 @@
+Preset L FAR/hr=0.967, Delay_s=1840.0, P=0.899, R=0.22, ON=0.84, OFF=0.66, K/M=7/11, min=90, refr=240
