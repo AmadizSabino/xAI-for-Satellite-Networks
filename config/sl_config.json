@@ -1,0 +1,21 @@
+{
+  "threshold_val": 0.9469664692878723,
+  "ema_span": 4,
+  "on_thr": 0.9469664692878723,
+  "off_thr": 0.7669664692878724,
+  "k": 7,
+  "m": 11,
+  "min_duration_s": 90,
+  "refractory_s": 240,
+  "metrics": {
+    "val_ap": 0.7161546340221149,
+    "test_pr_auc": 0.7201979264896663,
+    "test_roc_auc": 0.8269981178637384,
+    "raw_far_per_hour": 48.880290587492105,
+    "raw_delay_s": 0.0,
+    "event_far_per_hour": 0.5370207025372282,
+    "event_delay_s": 4490.0,
+    "event_precision": 0.9304347826086956,
+    "event_recall": 0.12662721893491125
+  }
+}
