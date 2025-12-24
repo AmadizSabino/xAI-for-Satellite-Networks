@@ -2,12 +2,12 @@ from pathlib import Path
 import streamlit as st
 import pandas as pd
 import numpy as np
-from pathlib import Path
 import plotly.express as px
 import datetime as dt
 from functools import lru_cache
 import requests
 import json
+import joblib
 import textwrap
 
 # ------------------------------
@@ -46,9 +46,6 @@ stress_windows_df = safe_read_csv(PROCESSED_DIR / "stress_top_windows.csv", "str
 
 
 # --------------------------------------------------
-import json
-import joblib
-
 with open(MODELS_DIR / "model_handover.json", "r") as f:
     model_handover = json.load(f)
 
