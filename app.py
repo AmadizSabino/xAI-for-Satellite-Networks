@@ -13,7 +13,6 @@ import textwrap
 # ------------------------------
 # Paths and global constants
 # ------------------------------
-
 BASE_DIR = Path(__file__).resolve().parent
 
 DATA_DIR = BASE_DIR / "data"
@@ -34,16 +33,17 @@ CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
 THESIS_URL = "https://your-thesis-link"
 
 # --------------------------------------------------
-alerts_df = pd.read_csv(PROCESSED_DIR / "dashboard_alerts.csv")
-history_df = pd.read_csv(PROCESSED_DIR / "dashboard_alert_history.csv")
-acks_df = pd.read_csv(PROCESSED_DIR / "dashboard_alert_acks.csv")
-feedback_df = pd.read_csv(PROCESSED_DIR / "dashboard_feedback.csv")
+alerts_df = safe_read_csv(PROCESSED_DIR / "dashboard_alerts.csv", "dashboard_alerts.csv")
+history_df = safe_read_csv(PROCESSED_DIR / "dashboard_alert_history.csv", "dashboard_alert_history.csv")
+acks_df = safe_read_csv(PROCESSED_DIR / "dashboard_alert_acks.csv", "dashboard_alert_acks.csv")
+feedback_df = safe_read_csv(PROCESSED_DIR / "dashboard_feedback.csv", "dashboard_feedback.csv")
 
-capacity_ts_df = pd.read_csv(PROCESSED_DIR / "capacity_risk_timeseries.csv")
-capacity_shap_df = pd.read_csv(PROCESSED_DIR / "capacity_risk_shap_global.csv")
+capacity_ts_df = safe_read_csv(PROCESSED_DIR / "capacity_risk_timeseries.csv", "capacity_risk_timeseries.csv")
+capacity_shap_df = safe_read_csv(PROCESSED_DIR / "capacity_risk_shap_global.csv", "capacity_risk_shap_global.csv")
 
-stress_ts_df = pd.read_csv(PROCESSED_DIR / "stress_timeseries.csv")
-stress_windows_df = pd.read_csv(PROCESSED_DIR / "stress_top_windows.csv")
+stress_ts_df = safe_read_csv(PROCESSED_DIR / "stress_timeseries.csv", "stress_timeseries.csv")
+stress_windows_df = safe_read_csv(PROCESSED_DIR / "stress_top_windows.csv", "stress_top_windows.csv")
+
 
 # --------------------------------------------------
 import json
@@ -240,30 +240,45 @@ def load_image_path(relative_paths):
             return str(p)
     return None
 
+#def append_feedback(row: dict):
+#    try:
+#        if FEEDBACK_CSV.exists():
+#            existing = pd.read_csv(FEEDBACK_CSV)
+#            existing = pd.concat([existing, pd.DataFrame([row])], ignore_index=True)
+#            existing.to_csv(FEEDBACK_CSV, index=False)
+#        else:
+#            pd.DataFrame([row]).to_csv(FEEDBACK_CSV, index=False)
+#    except Exception:
+#        st.warning("Could not persist feedback to CSV in this environment.")
+
 def append_feedback(row: dict):
-    try:
-        if FEEDBACK_CSV.exists():
-            existing = pd.read_csv(FEEDBACK_CSV)
-            existing = pd.concat([existing, pd.DataFrame([row])], ignore_index=True)
-            existing.to_csv(FEEDBACK_CSV, index=False)
-        else:
-            pd.DataFrame([row]).to_csv(FEEDBACK_CSV, index=False)
-    except Exception:
-        st.warning("Could not persist feedback to CSV in this environment.")
+    if "runtime_feedback" not in st.session_state:
+        st.session_state["runtime_feedback"] = []
+
+    st.session_state["runtime_feedback"].append(row)
+
+
+#def append_alert_history(rows: list):
+#    if not rows:
+#        return
+#    try:
+#        new_df = pd.DataFrame(rows)
+#        if ALERT_HISTORY_CSV.exists():
+#            old = pd.read_csv(ALERT_HISTORY_CSV)
+#            merged = pd.concat([old, new_df], ignore_index=True)
+#        else:
+#            merged = new_df
+#        merged.to_csv(ALERT_HISTORY_CSV, index=False)
+#    except Exception:
+#        st.warning("Could not persist alert history to CSV in this environment.")
 
 def append_alert_history(rows: list):
     if not rows:
         return
-    try:
-        new_df = pd.DataFrame(rows)
-        if ALERT_HISTORY_CSV.exists():
-            old = pd.read_csv(ALERT_HISTORY_CSV)
-            merged = pd.concat([old, new_df], ignore_index=True)
-        else:
-            merged = new_df
-        merged.to_csv(ALERT_HISTORY_CSV, index=False)
-    except Exception:
-        st.warning("Could not persist alert history to CSV in this environment.")
+    if "runtime_alert_history" not in st.session_state:
+        st.session_state["runtime_alert_history"] = []
+    st.session_state["runtime_alert_history"].extend(rows)
+
 
 def load_shap_matrix(relative_path):
     df = load_csv(relative_path)
@@ -851,7 +866,7 @@ def page_signal_loss():
         st.markdown("### Feature importance over time for Signal Loss model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_signal_loss/signal_loss_event_shap_values.csv"
+            "reports/figures/signal_loss_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1072,7 +1087,7 @@ def page_sla():
 
     with col_main:
         st.markdown("#### SLA thresholds and breaches")
-        sla_df = load_csv("artifacts_sla/sla_breach_events.csv", parse_dates=["start", "end"])
+        sla_df = load_csv("reports/figures/sla_breach_events.csv", parse_dates=["start", "end"])
         if sla_df is not None:
             sla_df = apply_time_filter(sla_df, "start")
             if not sla_df.empty:
@@ -1208,7 +1223,7 @@ def page_handover():
     with col_main:
         st.markdown("### Feature importance over time for Handover model (SHAP values)")
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_handover/handover_event_shap_values.csv"
+            "reports/figures/handover_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1320,7 +1335,7 @@ def page_space_weather():
     with col_main:
         st.markdown("### Feature importance over time for Space Weather maneuver model (SHAP values)")
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_spaceweather/spaceweather_risky_shap_values.csv"
+            "reports/figures/spaceweather_risky_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1859,13 +1874,23 @@ def page_alert_analytics():
     )
     lit_expander("alerts")
 
-    if not ALERT_HISTORY_CSV.exists():
-        st.info("No alert history CSV found yet. Interact with alerts in other pages to generate data.")
+    #if not ALERT_HISTORY_CSV.exists():
+    #    st.info("No alert history CSV found yet. Interact with alerts in other pages to generate data.")
+    #    render_thesis_footer()
+    #    return
+
+    #alerts = pd.read_csv(ALERT_HISTORY_CSV)
+
+    repo_alerts = pd.read_csv(ALERT_HISTORY_CSV) if ALERT_HISTORY_CSV.exists() else pd.DataFrame()
+    runtime_alerts = pd.DataFrame(st.session_state.get("runtime_alert_history", []))
+    alerts = pd.concat([repo_alerts, runtime_alerts], ignore_index=True)
+    
+    if alerts.empty:
+        st.info("No alert history found yet. Interact with alerts in other pages to generate data.")
         render_thesis_footer()
         return
 
-    alerts = pd.read_csv(ALERT_HISTORY_CSV)
-
+    
     # --- Parse timestamps consistently as tz-aware UTC ---
     if "time_center" in alerts.columns:
         alerts["time_center"] = pd.to_datetime(alerts["time_center"], errors="coerce", utc=True)
@@ -2049,13 +2074,23 @@ def page_feedback_analytics():
     )
     lit_expander("feedback")
 
-    if not FEEDBACK_CSV.exists():
-        st.info("No feedback CSV found yet. Provide feedback on the Overview page to generate data.")
+    #if not FEEDBACK_CSV.exists():
+    #    st.info("No feedback CSV found yet. Provide feedback on the Overview page to generate data.")
+    #    render_thesis_footer()
+    #    return
+
+    #fb = pd.read_csv(FEEDBACK_CSV)
+
+    repo_fb = pd.read_csv(FEEDBACK_CSV) if FEEDBACK_CSV.exists() else pd.DataFrame()
+    runtime_fb = pd.DataFrame(st.session_state.get("runtime_feedback", []))
+    fb = pd.concat([repo_fb, runtime_fb], ignore_index=True)
+    
+    if fb.empty:
+        st.info("No feedback found yet. Provide feedback on the Overview page to generate data.")
         render_thesis_footer()
         return
 
-    fb = pd.read_csv(FEEDBACK_CSV)
-
+    
     st.markdown("### 1. Role mix")
     if "role" in fb.columns:
         role_counts = fb["role"].value_counts().reset_index()
