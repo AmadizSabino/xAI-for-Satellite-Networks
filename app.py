@@ -59,11 +59,7 @@ with open(CONFIG_DIR / "thresholding.json", "r") as f:
     thresholds = json.load(f)
     
 # --------------------------------------------------
-def safe_read_csv(path: Path, name: str):
-    if not path.exists():
-        st.error(f"Required file not found: {name}")
-        st.stop()
-    return pd.read_csv(path)
+
 
 # --------------------------------------------------
 alerts_df = safe_read_csv(
@@ -252,6 +248,12 @@ def fig_path(filename: str) -> str | None:
 #            pd.DataFrame([row]).to_csv(FEEDBACK_CSV, index=False)
 #    except Exception:
 #        st.warning("Could not persist feedback to CSV in this environment.")
+
+def safe_read_csv(path: Path, name: str):
+    if not path.exists():
+        st.error(f"Required file not found: {name}")
+        st.stop()
+    return pd.read_csv(path)
 
 def append_feedback(row: dict):
     if "runtime_feedback" not in st.session_state:
@@ -909,7 +911,7 @@ def page_signal_loss():
         lit_expander("signal_loss")
 
         st.markdown("#### Example anomaly-score trend")
-        scores = load_csv("artifacts_signal_loss/test_scores_raw.csv", parse_dates=["timestamp"])
+        scores = load_csv("data/processed/test_scores_raw.csv", parse_dates=["timestamp"])
         if scores is not None:
             if "timestamp" in scores.columns:
                 scores = scores.rename(columns={"timestamp": "time"})
@@ -1376,8 +1378,15 @@ def page_space_weather():
         lit_expander("spaceweather")
 
     with col_side:
-        maneuvers = safe_read_csv(PROCESSED_DIR / "ses_spaceweather_dataset.csv", "ses_spaceweather_dataset.csv", parse_dates=["time"])
+        #maneuvers = safe_read_csv(PROCESSED_DIR / "ses_spaceweather_dataset.csv", "ses_spaceweather_dataset.csv", parse_dates=["time"])
+        def safe_read_csv(path: Path, name: str, **read_csv_kwargs):
+        if not path.exists():
+            st.error(f"Required file not found: {name}")
+            st.stop()
+        return pd.read_csv(path, **read_csv_kwargs)
+        
         alerts_df = None
+        
         if maneuvers is not None and "risk_score" in maneuvers.columns:
             maneuvers = maneuvers.sort_values("time", ascending=False).head(50)
             maneuvers["time_center"] = maneuvers["time"]
