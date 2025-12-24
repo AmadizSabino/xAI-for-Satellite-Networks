@@ -1,38 +1,28 @@
 {
-  "problem": "Beam Handover Anomalies (inferred beam_id from MODEM OUT clustering)",
+  "problem": "SLA Breach",
   "resample": "10s",
-  "beam_inference": {
-    "pca_dim": 6,
-    "kmeans_k": 2,
-    "flicker_smoothing_s": 60
-  },
-  "handover_rules": {
-    "drop_pct_thr": 0.041967432986525284,
-    "pingpong_s": 300.0,
-    "recovery_s_thr": 45.0
-  },
+  "early_warning_min": 2,
   "thresholding": {
-    "target_precision": 0.85,
-    "tau_val": 0.945569634437561,
-    "validation_ap": 0.10509562904718159,
-    "early_warning_min": 2
+    "target_precision": 0.8,
+    "tau_val": 0.995512068271637,
+    "validation_ap": 0.45960461742431996
   },
   "eventization": {
     "ema_span": 4,
-    "on_thr": 0.79557,
-    "off_thr": 0.67557,
-    "k": 3,
-    "m": 5,
-    "min_dur_s": 120,
-    "refractory_s": 60
+    "on_thr": 0.945512068271637,
+    "off_thr": 0.765512068271637,
+    "k": 7,
+    "m": 11,
+    "min_dur_s": 90,
+    "refractory_s": 240
   },
   "metrics_test": {
-    "far_per_hr": 0.01,
-    "median_delay_s": 84655.0,
-    "median_lead_s": 215285.0,
-    "event_precision": 0.5,
-    "event_recall": 0.012,
-    "pred_events": 2,
-    "gt_events": 84
+    "far_per_hr": 0.0,
+    "median_delay_s": 1640.0,
+    "median_lead_s": null,
+    "event_precision": 1.0,
+    "event_recall": 0.03,
+    "pred_events": 1,
+    "gt_events": 33
   }
 }

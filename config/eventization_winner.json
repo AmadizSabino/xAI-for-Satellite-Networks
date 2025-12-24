@@ -1,15 +1,10 @@
 {
-  "name": "SLA-ADAPT-GUARDRAIL",
+  "name": "Preset L",
   "ema_span": 4,
-  "on_thr": 0.79557,
-  "off_thr": 0.67557,
-  "k": 3,
-  "m": 5,
-  "min_dur_s": 120,
-  "refractory_s": 60,
-  "far_per_hr": 0.009537,
-  "delay_s": 84655.0,
-  "precision": 0.5,
-  "recall": 0.012,
-  "alerts": 2
+  "on_thr": 0.945512068271637,
+  "off_thr": 0.765512068271637,
+  "k": 7,
+  "m": 11,
+  "min_dur_s": 90,
+  "refractory_s": 240
 }

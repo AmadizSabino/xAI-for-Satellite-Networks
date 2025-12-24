@@ -1,6 +1,6 @@
 {
-  "target_precision": 0.85,
-  "tau_val": 0.945569634437561,
-  "validation_ap": 0.10509562904718159,
+  "target_precision": 0.8,
+  "tau_val": 0.995512068271637,
+  "validation_ap": 0.45960461742431996,
   "early_warning_min": 2
 }
