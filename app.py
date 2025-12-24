@@ -27,10 +27,53 @@ FIGURES_DIR = BASE_DIR / "reports" / "figures"
 FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
 ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
 #ALERTS_CSV = BASE_DIR / "alerts_history.csv"
-# --------------------------------------------------
 
+# --------------------------------------------------
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
 THESIS_URL = "https://your-thesis-link"
+
+# --------------------------------------------------
+alerts_df = pd.read_csv(PROCESSED_DIR / "dashboard_alerts.csv")
+history_df = pd.read_csv(PROCESSED_DIR / "dashboard_alert_history.csv")
+acks_df = pd.read_csv(PROCESSED_DIR / "dashboard_alert_acks.csv")
+feedback_df = pd.read_csv(PROCESSED_DIR / "dashboard_feedback.csv")
+
+capacity_ts_df = pd.read_csv(PROCESSED_DIR / "capacity_risk_timeseries.csv")
+capacity_shap_df = pd.read_csv(PROCESSED_DIR / "capacity_risk_shap_global.csv")
+
+stress_ts_df = pd.read_csv(PROCESSED_DIR / "stress_timeseries.csv")
+stress_windows_df = pd.read_csv(PROCESSED_DIR / "stress_top_windows.csv")
+
+# --------------------------------------------------
+import json
+import joblib
+
+with open(MODELS_DIR / "model_handover.json", "r") as f:
+    model_handover = json.load(f)
+
+scaler = joblib.load(MODELS_DIR / "scaler_step8.joblib")
+
+# --------------------------------------------------
+with open(CONFIG_DIR / "config.json", "r") as f:
+    config = json.load(f)
+
+with open(CONFIG_DIR / "thresholding.json", "r") as f:
+    thresholds = json.load(f)
+    
+# --------------------------------------------------
+def safe_read_csv(path: Path, name: str):
+    if not path.exists():
+        st.error(f"Required file not found: {name}")
+        st.stop()
+    return pd.read_csv(path)
+
+# --------------------------------------------------
+alerts_df = safe_read_csv(
+    PROCESSED_DIR / "dashboard_alerts.csv",
+    "dashboard_alerts.csv"
+)
+
+# --------------------------------------------------
 
 # ------------------------------
 # Translation engine (local dictionaries)
