@@ -240,6 +240,11 @@ def load_image_path(relative_paths):
             return str(p)
     return None
 
+def fig_path(filename: str) -> str | None:
+    p = FIGURES_DIR / filename
+    return str(p) if p.exists() else None
+
+
 #def append_feedback(row: dict):
 #    try:
 #        if FEEDBACK_CSV.exists():
@@ -890,8 +895,8 @@ def page_signal_loss():
             )
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_signal_loss/signal_loss_event_heatmap.png")
-            cont_img = load_image_path("artifacts_signal_loss/signal_loss_continuous_heatmap.png")
+            event_img = fig_path("signal_loss_event_heatmap.png")
+            cont_img  = fig_path("signal_loss_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Signal Loss – SHAP heatmap around one event", use_container_width=True)
             if cont_img:
@@ -1016,8 +1021,8 @@ def page_jamming():
             )
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_jamming/jamming_event_heatmap.png")
-            cont_img = load_image_path("artifacts_jamming/jamming_continuous_heatmap.png")
+            event_img = fig_path("jamming_event_heatmap.png")
+            cont_img  = fig_path("jamming_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Jamming – SHAP heatmap around a suspected event", use_container_width=True)
             if cont_img:
@@ -1124,8 +1129,8 @@ def page_sla():
             fig_shap = add_shap_hover(fig_shap, x_label="time step", y_label="feature")
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_sla/sla_event_heatmap.png")
-            cont_img = load_image_path("artifacts_sla/sla_continuous_heatmap.png")
+            event_img = fig_path("sla_event_heatmap.png")
+            cont_img  = fig_path("sla_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="SLA – SHAP heatmap around one breach", use_container_width=True)
             if cont_img:
@@ -1239,8 +1244,8 @@ def page_handover():
             fig_shap = add_shap_hover(fig_shap, x_label="time step", y_label="feature")
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_handover/handover_event_heatmap.png")
-            cont_img = load_image_path("artifacts_handover/handover_continuous_heatmap.png")
+            event_img = fig_path("handover_event_heatmap.png")
+            cont_img  = fig_path("handover_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Beam Handover – SHAP heatmap around one anomalous handover", use_container_width=True)
             if cont_img:
@@ -1356,8 +1361,8 @@ def page_space_weather():
             )
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_spaceweather/spaceweather_risky_heatmap.png")
-            cont_img = load_image_path("artifacts_spaceweather/spaceweather_continuous_heatmap.png")
+            event_img = fig_path("spaceweather_risky_heatmap.png")
+            cont_img  = fig_path("spaceweather_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Space Weather – SHAP heatmap for top risky maneuvers", use_container_width=True)
             if cont_img:
@@ -1374,7 +1379,7 @@ def page_space_weather():
         lit_expander("spaceweather")
 
     with col_side:
-        maneuvers = load_csv("ses_spaceweather_dataset.csv", parse_dates=["time"])
+        maneuvers = safe_read_csv(PROCESSED_DIR / "ses_spaceweather_dataset.csv", "ses_spaceweather_dataset.csv", parse_dates=["time"])
         alerts_df = None
         if maneuvers is not None and "risk_score" in maneuvers.columns:
             maneuvers = maneuvers.sort_values("time", ascending=False).head(50)
