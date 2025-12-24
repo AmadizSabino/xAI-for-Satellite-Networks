@@ -1,0 +1,3 @@
+alert_key,usecase,acked_at_utc,severity
+signal_loss:ALERT-1:2021-11-01 00:00:00,signal_loss,2025-12-07T15:17:07.949121+00:00,high
+spaceweather:ALERT-2:2021-11-01 01:00:00,spaceweather,2025-12-07T15:18:37.635135+00:00,medium

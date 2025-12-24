@@ -1,0 +1,22 @@
+alert_key,usecase,alert_id,time,severity,logged_at
+signal_loss:DEMO-signal_loss-1:2021-11-01 00:00:00,signal_loss,DEMO-signal_loss-1,2021-11-01 00:00:00,high,2025-12-07 20:16:59.329805+00:00
+signal_loss:DEMO-signal_loss-2:2021-11-01 01:00:00,signal_loss,DEMO-signal_loss-2,2021-11-01 01:00:00,medium,2025-12-07 20:16:59.330008+00:00
+signal_loss:DEMO-signal_loss-3:2021-11-01 02:00:00,signal_loss,DEMO-signal_loss-3,2021-11-01 02:00:00,medium,2025-12-07 20:16:59.330126+00:00
+jamming:DEMO-jamming-1:2021-11-01 00:00:00,jamming,DEMO-jamming-1,2021-11-01 00:00:00,high,2025-12-07 20:18:48.945924+00:00
+jamming:DEMO-jamming-2:2021-11-01 01:00:00,jamming,DEMO-jamming-2,2021-11-01 01:00:00,medium,2025-12-07 20:18:48.946079+00:00
+jamming:DEMO-jamming-3:2021-11-01 02:00:00,jamming,DEMO-jamming-3,2021-11-01 02:00:00,medium,2025-12-07 20:18:48.946169+00:00
+handover:Unknown beam:2021-11-30 23:52:40+00:00,handover,Unknown beam,2021-11-30 23:52:40+00:00,medium,2025-12-07 20:19:47.576468+00:00
+handover:Unknown beam:2021-11-30 23:39:40+00:00,handover,Unknown beam,2021-11-30 23:39:40+00:00,medium,2025-12-07 20:19:47.576609+00:00
+handover:Unknown beam:2021-11-30 23:34:30+00:00,handover,Unknown beam,2021-11-30 23:34:30+00:00,high,2025-12-07 20:19:47.576716+00:00
+sla:SLA throughput:2021-11-30 16:58:50+00:00,sla,SLA throughput,2021-11-30 16:58:50+00:00,high,2025-12-07 20:19:49.246021+00:00
+sla:SLA throughput:2021-11-30 01:23:30+00:00,sla,SLA throughput,2021-11-30 01:23:30+00:00,high,2025-12-07 20:19:49.246135+00:00
+sla:SLA throughput:2021-11-30 00:35:30+00:00,sla,SLA throughput,2021-11-30 00:35:30+00:00,high,2025-12-07 20:19:49.246218+00:00
+spaceweather:DEMO-spaceweather-1:2021-11-01 00:00:00,spaceweather,DEMO-spaceweather-1,2021-11-01 00:00:00,high,2025-12-07 20:20:25.620979+00:00
+spaceweather:DEMO-spaceweather-2:2021-11-01 01:00:00,spaceweather,DEMO-spaceweather-2,2021-11-01 01:00:00,medium,2025-12-07 20:20:25.621152+00:00
+spaceweather:DEMO-spaceweather-3:2021-11-01 02:00:00,spaceweather,DEMO-spaceweather-3,2021-11-01 02:00:00,medium,2025-12-07 20:20:25.621278+00:00
+capacity:Beam-C:2021-11-01 00:00:00,capacity,Beam-C,2021-11-01 00:00:00,medium,2025-12-07 20:20:43.139296+00:00
+capacity:Beam-A:2021-11-01 00:00:00,capacity,Beam-A,2021-11-01 00:00:00,high,2025-12-07 20:20:43.139410+00:00
+capacity:Beam-B:2021-11-01 00:00:00,capacity,Beam-B,2021-11-01 00:00:00,high,2025-12-07 20:20:43.139490+00:00
+stress:SAT net:2021-11-01 00:00:00,stress,SAT net,2021-11-01 00:00:00,medium,2025-12-07 20:20:59.055151+00:00
+stress:SAT net:2021-10-31 23:00:00,stress,SAT net,2021-10-31 23:00:00,medium,2025-12-07 20:20:59.055264+00:00
+stress:SAT net:2021-10-31 22:00:00,stress,SAT net,2021-10-31 22:00:00,medium,2025-12-07 20:20:59.055347+00:00

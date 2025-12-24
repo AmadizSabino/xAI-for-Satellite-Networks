@@ -1,0 +1,11 @@
+timestamp_utc,role,feedback,impact_estimate,satellite_filter,time_window,usability_score,xai_helpfulness_score,ux_overall,ux_shap_helpfulness,ux_alert_clarity,ux_shap,ux_layout,ux_trust,time_window_display
+2025-12-05T15:11:12.798120+00:00,Manager,Amadiz Feedback 00001,Minor – quality-of-life improvements,M003,Full dataset,,,,,,,,,
+2025-12-06T20:23:44.217344+00:00,NOC operator,The explainability of each use case anomalies issues,Moderate – minutes of downtime avoided per week,M003,Full dataset,4.0,5.0,,,,,,,
+2025-12-06T21:32:12.771322+00:00,Other,"The work presents a good structure and clarity in its argumentation, demonstrating a solid understanding of the topic.",High – tens of thousands of EUR per year in avoided penalties,M003,Full dataset,5.0,4.0,,,,,,,
+2025-12-06T21:37:21.820186+00:00,Manager,"The content is well-founded and articulated in a coherent manner.
+There is a good selection of references and adequate integration with the proposed analysis",Moderate – minutes of downtime avoided per week,M003,Full dataset,5.0,5.0,,,,,,,
+2025-12-06T21:39:25.099653+00:00,Engineer,The organization of the content makes it easy to read and understand.,High – tens of thousands of EUR per year in avoided penalties,M003,Full dataset,5.0,5.0,,,,,,,
+2025-12-07T09:19:21.706506+00:00,Student / Researcher,SHAP metrics are a very good help understanding the anomalies. But the Alerts suggested actions are not clear enough for someone outside of the industry.,Unknown / hard to estimate,M003,Full dataset,,,4.0,5.0,2.0,,,,
+2025-12-07T09:36:48.453933+00:00,NOC operator,It is not clear how SHAP explanations can support decision making for NOC operators. It is not very useful from my perspective.,High – tens of thousands of EUR per year in avoided penalties,M003,Full dataset,,,3.0,1.0,2.0,,,,
+2025-12-07T20:16:52.601239+00:00,NOC operator,I am NOT satisfied with the depth of explanation provided by the SHAP algorithm. I prefer following personal on-field experience obtained from 30 years working with satellites .,Unknown / hard to estimate,M003,Full dataset,,,,,,1.0,5.0,1.0,
+2025-12-18T14:19:28.983450+00:00,NOC operator,The SHAP heatmaps are very well done and easy to understand,High – tens of thousands of EUR per year in avoided penalties,M003,,,,,,,5.0,5.0,5.0,Full dataset

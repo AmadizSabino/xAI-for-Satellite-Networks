@@ -1,0 +1,7 @@
+feature,mean_abs_shap
+demand_risk,0.55090729435957
+signal_loss_risk,0.19948860864690138
+sla_risk,0.12321066964648598
+jamming_risk,0.05514404912046098
+handover_risk,0.05373980931098961
+space_weather_risk,0.04810427093623349
