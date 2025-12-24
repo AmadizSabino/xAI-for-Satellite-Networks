@@ -1,0 +1,28 @@
+{
+  "problem": "SLA Breach",
+  "resample": "10s",
+  "early_warning_min": 2,
+  "thresholding": {
+    "target_precision": 0.8,
+    "tau_val": 0.995512068271637,
+    "validation_ap": 0.45960461742431996
+  },
+  "eventization": {
+    "ema_span": 4,
+    "on_thr": 0.945512068271637,
+    "off_thr": 0.765512068271637,
+    "k": 7,
+    "m": 11,
+    "min_dur_s": 90,
+    "refractory_s": 240
+  },
+  "metrics_test": {
+    "far_per_hr": 0.0,
+    "median_delay_s": 1640.0,
+    "median_lead_s": null,
+    "event_precision": 1.0,
+    "event_recall": 0.03,
+    "pred_events": 1,
+    "gt_events": 33
+  }
+}

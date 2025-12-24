@@ -1,0 +1,11 @@
+{
+  "throughput": {
+    "column": "__THROUGHPUT_PROXY_Mbps",
+    "direction": "higher_better",
+    "warn_pct": 20,
+    "sla_pct": 10,
+    "warn_thr": 211.7583,
+    "sla_thr": 206.32500000000002,
+    "comparator": "lt"
+  }
+}
