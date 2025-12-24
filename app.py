@@ -24,9 +24,10 @@ MODELS_DIR = BASE_DIR / "models"
 CONFIG_DIR = BASE_DIR / "config"
 FIGURES_DIR = BASE_DIR / "reports" / "figures"
 
-FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
-ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
-#ALERTS_CSV = BASE_DIR / "alerts_history.csv"
+FEEDBACK_CSV = PROCESSED_DIR / "dashboard_feedback.csv"
+ALERT_HISTORY_CSV = PROCESSED_DIR / "dashboard_alert_history.csv"
+ALERTS_CSV = PROCESSED_DIR / "alerts_history.csv"
+
 
 # --------------------------------------------------
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
