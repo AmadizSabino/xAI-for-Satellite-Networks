@@ -1,4 +1,4 @@
-
+from pathlib import Path
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,11 +14,20 @@ import textwrap
 # Paths and global constants
 # ------------------------------
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
+
+DATA_DIR = BASE_DIR / "data"
+PROCESSED_DIR = DATA_DIR / "processed"
+INTERIM_DIR = DATA_DIR / "interim"
+
+MODELS_DIR = BASE_DIR / "models"
+CONFIG_DIR = BASE_DIR / "config"
+FIGURES_DIR = BASE_DIR / "reports" / "figures"
+
 FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
 ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
 #ALERTS_CSV = BASE_DIR / "alerts_history.csv"
-###Apagar a frase em cima
+# --------------------------------------------------
 
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
 THESIS_URL = "https://your-thesis-link"
