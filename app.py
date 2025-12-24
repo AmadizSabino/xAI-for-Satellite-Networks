@@ -421,9 +421,8 @@ def add_shap_hover(fig, x_label="time", y_label="feature", context_note=None):
 def render_alerts(df, id_col, time_col, severity_col, title, usecase_key, max_rows=3):
     st.markdown(f"### {title}")
 
-    #now_utc = pd.Timestamp.utcnow().tz_localize("UTC")
     now_utc = pd.Timestamp.now(tz="UTC")
-    acked_at_utc = now_utc.isoformat()
+    #acked_at_utc = now_utc.isoformat()
 
     # 3D-like style for Streamlit buttons (including Acknowledge)
     st.markdown(
@@ -936,7 +935,7 @@ def page_signal_loss():
         st.image(gif_url, caption="Signal Loss illustration", use_container_width=True)
 
         events = load_csv(
-            ["artifacts_signal_loss/test_eventized_scores.csv", "artifacts_signal_loss/test_scores.csv"],
+            ["data/processed/test_eventized_scores.csv", "data/processed/test_scores.csv"],
             parse_dates=["t_start", "t_end"],
         )
         alerts_df = None
@@ -999,7 +998,7 @@ def page_jamming():
         st.markdown("### Feature importance over time for Jamming model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_jamming/jamming_event_shap_values.csv"
+            "data/processed/jamming_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1038,7 +1037,7 @@ def page_jamming():
         lit_expander("jamming")
 
     with col_side:
-        events = load_csv("artifacts_jamming/test_eventized_scores.csv", parse_dates=["t_start", "t_end"])
+        events = load_csv("data/processed/test_eventized_scores.csv", parse_dates=["t_start", "t_end"])
         alerts_df = None
         if events is not None:
             events["time_center"] = events["t_start"]
@@ -1112,7 +1111,7 @@ def page_sla():
         st.markdown("#### Feature importance over time for SLA risk model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_sla/sla_event_shap_values.csv"
+            "data/processed/sla_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1160,7 +1159,7 @@ def page_sla():
             )
             st.info("Simulated high-risk SLA window added to the alert list.")
 
-        sla_df = load_csv("artifacts_sla/sla_breach_events.csv", parse_dates=["start", "end"])
+        sla_df = load_csv("data/processed/sla_breach_events.csv", parse_dates=["start", "end"])
         alerts_df = None
         if sla_df is not None:
             sla_df = apply_time_filter(sla_df, "start")
@@ -1261,7 +1260,7 @@ def page_handover():
         lit_expander("handover")
 
     with col_side:
-        events = load_csv("artifacts_handover/handover_table.csv", parse_dates=["t"])
+        events = load_csv("data/processed/handover_table.csv", parse_dates=["t"])
         alerts_df = None
         if events is not None:
             events = events.tail(200)
@@ -1378,7 +1377,6 @@ def page_space_weather():
         lit_expander("spaceweather")
 
     with col_side:
-        #maneuvers = safe_read_csv(PROCESSED_DIR / "ses_spaceweather_dataset.csv", "ses_spaceweather_dataset.csv", parse_dates=["time"])
         def safe_read_csv(path: Path, name: str, **read_csv_kwargs):
         if not path.exists():
             st.error(f"Required file not found: {name}")
@@ -1469,7 +1467,7 @@ def page_capacity():
     st.caption("Synthetic data; real SES metrics are discussed in the thesis evaluation chapter.")
     lit_expander("capacity")
 
-    df = load_csv("artifacts_capacity/capacity_risk_demo.csv", parse_dates=["time"])
+    df = load_csv("data/processed/capacity_risk_demo.csv", parse_dates=["time"])
     if df is None:
         df = synth_capacity_demo()
 
@@ -1592,7 +1590,7 @@ def page_stress():
     )
     lit_expander("stress")
 
-    df = load_csv("artifacts_stress/stress_index_demo.csv", parse_dates=["time"])
+    df = load_csv("data/processed/stress_index_demo.csv", parse_dates=["time"])
     if df is None:
         df = synth_stress_demo()
 
@@ -1688,182 +1686,6 @@ def page_stress():
         "significant operational risk, potentially translating into tens of thousands of "
         "EUR per day if left unmanaged."
     )
-
-    render_thesis_footer()
-
-# ------------------------------
-# Alert Analytics (Thesis Mode) -- OLD
-# ------------------------------
-
-def page_alert_analytics_OLD():
-    render_academic_banner()
-    st.title("Alert Analytics (Thesis Mode)")
-    render_thesis_header()
-
-    st.markdown("---")
-    st.markdown(
-        "This page aggregates alerts from all use cases (including their severities and "
-        "acknowledgements). In the thesis this supports Phase 4 evaluation: measuring alert "
-        "volume, severity mix and acknowledgement behaviour as a proxy for alert fatigue "
-        "and operational usefulness."
-    )
-    lit_expander("alerts")
-
-    if not ALERT_HISTORY_CSV.exists():
-        st.info("No alert history CSV found yet. Interact with alerts in other pages to generate data.")
-        render_thesis_footer()
-        return
-
-    alerts = pd.read_csv(ALERT_HISTORY_CSV)
-    # ---- Compute time-to-ack (seconds) ----
-    #if "time_center" in alerts.columns and "acked_at_utc" in alerts.columns:
-    #    alerts["time_center"] = pd.to_datetime(alerts["time_center"], errors="coerce")
-    #    alerts["acked_at_utc"] = pd.to_datetime(alerts["acked_at_utc"], errors="coerce")
-    #    alerts["time_to_ack_s"] = (
-    #        alerts["acked_at_utc"] - alerts["time_center"]
-    #    ).dt.total_seconds()
-    #else:
-    #    alerts["time_to_ack_s"] = np.nan
-
-    if "time_center" in alerts.columns:
-        alerts["time_center"] = pd.to_datetime(alerts["time_center"], errors="coerce", utc=True)
-
-    if "acked_at_utc" in alerts.columns:
-        alerts["acked_at_utc"] = pd.to_datetime(alerts["acked_at_utc"], errors="coerce", utc=True)
-
-    # Compute time-to-ack in seconds (safe)
-    if "time_center" in alerts.columns and "acked_at_utc" in alerts.columns:
-        alerts["time_to_ack_s"] = (alerts["acked_at_utc"] - alerts["time_center"]).dt.total_seconds()
-    else:
-        alerts["time_to_ack_s"] = np.nan
-
-
-
-    #-----
-    #if "time_center" in alerts.columns:
-    #    alerts["time_center"] = pd.to_datetime(alerts["time_center"], errors="coerce")
-    #if "acked_at_utc" in alerts.columns:
-    #    alerts["acked_at_utc"] = pd.to_datetime(alerts["acked_at_utc"], errors="coerce")
-
-    st.markdown("### Latest alerts (combined)")
-    st.dataframe(alerts.sort_values("acked_at_utc", ascending=False).head(25))
-
-    st.markdown("### Alert severity mix")
-    sev_counts = alerts["severity"].value_counts().reset_index()
-    sev_counts.columns = ["severity", "count"]
-    if not sev_counts.empty:
-        fig = px.bar(sev_counts, x="severity", y="count", title="Alert counts by severity")
-        fig.update_layout(margin=dict(l=0, r=0, t=40, b=0))
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.markdown("### Alerts over time (hourly)")
-    if "time_center" in alerts.columns:
-        alerts_valid = alerts.dropna(subset=["time_center"]).copy()
-        alerts_valid["time_hour"] = alerts_valid["time_center"].dt.floor("H")
-        by_hour = alerts_valid.groupby("time_hour").size().reset_index(name="alert_count")
-        if not by_hour.empty:
-            fig = px.line(by_hour, x="time_hour", y="alert_count", title="Alert volume per hour")
-            fig.update_layout(margin=dict(l=0, r=0, t=40, b=0))
-            st.plotly_chart(fig, use_container_width=True)
-
-
-
-    acked = alerts.dropna(subset=["acked_at_utc"])
-    ack_rate = len(acked) / max(len(alerts), 1)
-
-   #median_tta = (
-   #     acked["time_to_ack_s"].median()
-   #     if "time_to_ack_s" in acked.columns and not acked.empty
-   #     else np.nan
-   #)
-
-    median_tta = (
-        acked["time_to_ack_s"].median()
-        if "time_to_ack_s" in acked.columns and not acked.empty
-        else None
-    )
-
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Total alerts", len(alerts))
-    c2.metric("Acknowledged alerts", len(acked))
-    c3.metric("Acknowledgement rate", f"{ack_rate*100:.1f}%")
-    #c4.metric(
-    #    "Median time-to-ack (s)",
-    #    f"{median_tta:.0f}" if not np.isnan(median_tta) else "N/A"
-    #)
-    c4.metric(
-        "Median time-to-ack (s)",
-        f"{int(round(median_tta))} s" if median_tta is not None and not np.isnan(median_tta) else "N/A"
-    )
-
-    st.caption(
-        "Time-to-ack is computed as the elapsed time between alert creation "
-        "and operator acknowledgement. Lower values indicate clearer, more "
-        "actionable alerts and reduced operational friction."
-    )
-
-
-    st.markdown("### Before / after threshold comparison")
-
-    if "threshold_version" not in alerts.columns:
-        st.info(
-            "No threshold version tags found. "
-            "Enable threshold tagging in alert generation to compare regimes."
-        )
-    else:
-        cmp = alerts.groupby("threshold_version").agg(
-            total_alerts=("alert_key", "count"),
-            acknowledged=("acked_at_utc", lambda x: x.notna().sum()),
-            median_time_to_ack_s=("time_to_ack_s", "median"),
-        ).reset_index()
-
-        cmp["ack_rate"] = cmp["acknowledged"] / cmp["total_alerts"]
-
-        st.dataframe(
-            cmp.style.format(
-                {
-                    "ack_rate": "{:.1%}",
-                    "median_time_to_ack_s": "{:.0f}",
-                }
-            ),
-            use_container_width=True
-        )
-
-        fig_vol = px.bar(
-            cmp,
-            x="threshold_version",
-            y="total_alerts",
-            title="Alert volume by threshold regime"
-        )
-        st.plotly_chart(fig_vol, use_container_width=True)
-
-        fig_ack = px.bar(
-            cmp,
-            x="threshold_version",
-            y="ack_rate",
-            range_y=[0, 1],
-            title="Acknowledgement rate by threshold regime"
-        )
-        st.plotly_chart(fig_ack, use_container_width=True)
-
-        fig_tta = px.bar(
-            cmp,
-            x="threshold_version",
-            y="median_time_to_ack_s",
-            title="Median time-to-ack by threshold regime (seconds)"
-        )
-        st.plotly_chart(fig_tta, use_container_width=True)
-
-    st.caption(
-        "This comparison demonstrates the operational trade-off between alert volume "
-        "and actionability. Precision-first settings typically reduce alert load while "
-        "improving acknowledgement rates and response times."
-    )
-
-
-
-
-    st.download_button("Download alert history CSV", data=alerts.to_csv(index=False), file_name="alert_history.csv")
 
     render_thesis_footer()
 
@@ -2085,13 +1907,6 @@ def page_feedback_analytics():
     )
     lit_expander("feedback")
 
-    #if not FEEDBACK_CSV.exists():
-    #    st.info("No feedback CSV found yet. Provide feedback on the Overview page to generate data.")
-    #    render_thesis_footer()
-    #    return
-
-    #fb = pd.read_csv(FEEDBACK_CSV)
-
     repo_fb = pd.read_csv(FEEDBACK_CSV) if FEEDBACK_CSV.exists() else pd.DataFrame()
     runtime_fb = pd.DataFrame(st.session_state.get("runtime_feedback", []))
     fb = pd.concat([repo_fb, runtime_fb], ignore_index=True)
@@ -2101,7 +1916,6 @@ def page_feedback_analytics():
         render_thesis_footer()
         return
 
-    
     st.markdown("### 1. Role mix")
     if "role" in fb.columns:
         role_counts = fb["role"].value_counts().reset_index()
