@@ -123,9 +123,11 @@ def load_joblib_optional(path: Path):
 model_handover = load_json_optional(MODELS_DIR / "model_handover.json")
 scaler = load_joblib_optional(MODELS_DIR / "scaler_step8.joblib")
 
-# Legacy names in your prior draft; keep optional to avoid runtime failures
-config = load_json_optional(CONFIG_DIR / "config.json")
-thresholds = load_json_optional(CONFIG_DIR / "thresholding.json")
+# Legacy names in prior version keeping optional to avoid runtime failures
+ho_config = load_json_optional(CONFIG_DIR / "ho_config.json")
+sl_config = load_json_optional(CONFIG_DIR / "sl_config.json")
+ho_thresholds = load_json_optional(CONFIG_DIR / "ho_thresholding.json")
+sla_thresholds = load_json_optional(CONFIG_DIR / "sla_thresholding.json")
 
 # ==========================================================
 # Translation engine (local dictionaries)
@@ -309,6 +311,8 @@ def get_time_window_hours():
     return None
 
 def apply_time_filter(df: pd.DataFrame | None, time_col: str):
+    df = df.copy()
+    df[time_col] = pd.to_datetime(df[time_col], errors="coerce", utc=True)
     hours = get_time_window_hours()
     if df is None or hours is None or time_col not in df.columns:
         return df
@@ -1504,9 +1508,16 @@ def page_feedback_analytics():
     }
 
     sentiment_available = False
+
+    def safe_polarity(text: str) -> float | None:
     try:
-        from textblob import TextBlob  # type: ignore
-        fb["sentiment_polarity"] = fb["feedback"].apply(lambda x: TextBlob(x).sentiment.polarity)
+        from textblob import TextBlob
+        return float(TextBlob(text).sentiment.polarity)
+    except Exception:
+        return None
+
+    try:
+        fb["sentiment_polarity"] = fb["feedback"].apply(lambda x: safe_polarity(x))
         sentiment_available = True
     except Exception:
         fb["sentiment_polarity"] = np.nan
