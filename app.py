@@ -1010,10 +1010,7 @@ def page_jamming():
         shap_df, feat_names, time_labels = load_shap_matrix(
             "reports/figures/jamming_event_shap_values.csv"
         )
-        shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_jamming/jamming_event_shap_values.csv"
-        )
-        
+               
         if shap_df is not None:
             # ---- Visual encoding controls (sidebar-like but local to page) ----
             with st.expander("Heatmap display options", expanded=False):
@@ -1052,7 +1049,7 @@ def page_jamming():
             fig_shap.update_layout(margin=dict(l=0, r=0, t=40, b=0))
             st.plotly_chart(fig_shap, use_container_width=True)
 
-           # xai_caveat("surrogate model")
+            xai_caveat("surrogate model")
         
             # ---- Short caveat (see Section 3 below) ----
             st.caption(
