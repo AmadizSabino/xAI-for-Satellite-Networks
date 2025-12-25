@@ -1052,7 +1052,7 @@ def page_jamming():
             fig_shap.update_layout(margin=dict(l=0, r=0, t=40, b=0))
             st.plotly_chart(fig_shap, use_container_width=True)
 
-            xai_caveat("surrogate model")
+           # xai_caveat("surrogate model")
         
             # ---- Short caveat (see Section 3 below) ----
             st.caption(
