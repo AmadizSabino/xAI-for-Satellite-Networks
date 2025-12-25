@@ -1051,6 +1051,8 @@ def page_jamming():
         
             fig_shap.update_layout(margin=dict(l=0, r=0, t=40, b=0))
             st.plotly_chart(fig_shap, use_container_width=True)
+
+            xai_caveat("surrogate model")
         
             # ---- Short caveat (see Section 3 below) ----
             st.caption(
@@ -1079,7 +1081,6 @@ def page_jamming():
 
         lit_expander("jamming")
 
-        xai_caveat("surrogate model")    
 
     with col_side:
         events = load_csv("data/processed/jam_test_eventized_scores.csv", parse_dates=["t_start", "t_end"])
