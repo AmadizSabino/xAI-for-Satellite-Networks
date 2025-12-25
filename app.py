@@ -14,14 +14,41 @@ import textwrap
 # Paths and global constants
 # ------------------------------
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
-ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
+#BASE_DIR = Path(__file__).resolve().parent.parent
+#FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
+#ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
 #ALERTS_CSV = BASE_DIR / "alerts_history.csv"
 
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data"
+
+FEEDBACK_CSV = DATA_DIR / "dashboard_feedback.csv"
+ALERT_HISTORY_CSV = DATA_DIR / "dashboard_alert_history.csv"
+
+# ==========================================================
+# Github repo
+# ==========================================================
 
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
 THESIS_URL = "https://your-thesis-link"
+
+# ==========================================================
+# File existence guards 
+# ==========================================================
+if not FEEDBACK_CSV.exists():
+    st.warning(f"Feedback file not found: {FEEDBACK_CSV}")
+
+if not ALERT_HISTORY_CSV.exists():
+    st.warning(f"Alert history file not found: {ALERT_HISTORY_CSV}")
+
+# ==========================================================
+# Data loading (guaranteed initialization)
+# ==========================================================
+if FEEDBACK_CSV.exists():
+    feedback_df = pd.read_csv(FEEDBACK_CSV)
+else:
+    feedback_df = pd.DataFrame(columns=["feedback"])
+
 
 # ------------------------------
 # Translation engine (local dictionaries)
