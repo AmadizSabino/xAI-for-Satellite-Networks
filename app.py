@@ -298,6 +298,12 @@ def prepare_shap_for_heatmap(
 
     return df, zmin, zmax
 
+def xai_caveat(model_type: str = "model"):
+    st.caption(
+        f"Interpretation caveat: Explanations describe how the {model_type} produced the displayed risk/score. "
+        "They do not prove physical causality. When telemetry features are correlated, importance may be distributed "
+        "across multiple channels rather than concentrated in a single row."
+    )
 
 # ------------------------------
 # Alerts helpers
@@ -1004,24 +1010,57 @@ def page_jamming():
         shap_df, feat_names, time_labels = load_shap_matrix(
             "reports/figures/jamming_event_shap_values.csv"
         )
+        shap_df, feat_names, time_labels = load_shap_matrix(
+            "artifacts_jamming/jamming_event_shap_values.csv"
+        )
+        
         if shap_df is not None:
-            fig_shap = px.imshow(
+            # ---- Visual encoding controls (sidebar-like but local to page) ----
+            with st.expander("Heatmap display options", expanded=False):
+                use_abs = st.checkbox("Show magnitude (|SHAP|) for clarity", value=True, key="jam_use_abs")
+                top_k = st.slider("Show top-K features", min_value=10, max_value=60, value=25, step=5, key="jam_top_k")
+                clip_q = st.slider("Clip extremes (quantile)", min_value=0.90, max_value=0.999, value=0.99, step=0.001, key="jam_clip_q")
+        
+            df_plot, zmin, zmax = prepare_shap_for_heatmap(
                 shap_df,
-                x=time_labels,
-                y=feat_names,
+                top_k=top_k,
+                use_abs=use_abs,
+                clip_quantile=clip_q,
+            )
+        
+            # Choose a scale that matches the meaning
+            if use_abs:
+                color_scale = "Viridis"  # sequential is better for magnitude
+                color_label = "|SHAP|"
+            else:
+                color_scale = "RdBu"     # diverging for signed SHAP
+                color_label = "SHAP value"
+        
+            fig_shap = px.imshow(
+                df_plot,
+                x=df_plot.columns.tolist(),
+                y=df_plot.index.tolist(),
                 aspect="auto",
-                color_continuous_scale="RdBu",
+                color_continuous_scale=color_scale,
                 origin="lower",
-                labels={"x": "time step within window", "y": "metric / modem", "color": "SHAP value"},
+                zmin=zmin,
+                zmax=zmax,
+                labels={"x": "time step within window", "y": "metric / modem", "color": color_label},
                 title="Jamming – SHAP heatmap around a suspected event",
             )
-            fig_shap = add_shap_hover(
-                fig_shap,
-                x_label="time step",
-                y_label="metric",
-                context_note="Related to Li (2023) and Tritscher (2023) on interference anomalies.",
-            )
+        
+            fig_shap.update_layout(margin=dict(l=0, r=0, t=40, b=0))
             st.plotly_chart(fig_shap, use_container_width=True)
+        
+            # ---- Short caveat (see Section 3 below) ----
+            st.caption(
+                "Interpretation note: This heatmap explains which features most influenced the model’s anomaly score "
+                "during the selected window. It is model-faithful (not causal), and correlated modem metrics may share "
+                "importance across several rows."
+            )
+
+            xai_caveat("surrogate model")
+               
         else:
             event_img = load_image_path("reports/figures/jamming_event_heatmap.png")
             cont_img = load_image_path("reports/figures/jamming_continuous_heatmap.png")
@@ -1037,6 +1076,8 @@ def page_jamming():
                 "- Narrow warm bands in a single row may indicate a localised carrier issue.\n"
                 "- Cool regions show features that argued against a jamming interpretation."
             )
+
+        
 
         lit_expander("jamming")
 
