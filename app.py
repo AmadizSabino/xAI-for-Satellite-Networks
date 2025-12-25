@@ -824,7 +824,7 @@ def page_signal_loss():
         st.markdown("### Feature importance over time for Signal Loss model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_signal_loss/signal_loss_event_shap_values.csv"
+            "reports/figures/signal_loss_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -848,8 +848,8 @@ def page_signal_loss():
             )
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_signal_loss/signal_loss_event_heatmap.png")
-            cont_img = load_image_path("artifacts_signal_loss/signal_loss_continuous_heatmap.png")
+            event_img = load_image_path("reports/figures/signal_loss_event_heatmap.png")
+            cont_img = load_image_path("reports/figures/signal_loss_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Signal Loss – SHAP heatmap around one event", use_container_width=True)
             if cont_img:
@@ -890,7 +890,7 @@ def page_signal_loss():
         st.image(gif_url, caption="Signal Loss illustration", use_container_width=True)
 
         events = load_csv(
-            ["artifacts_signal_loss/test_eventized_scores.csv", "artifacts_signal_loss/test_scores.csv"],
+            ["data/processed/sl_test_eventized_scores.csv", "data/processed/sl_test_scores.csv"],
             parse_dates=["t_start", "t_end"],
         )
         alerts_df = None
@@ -953,7 +953,7 @@ def page_jamming():
         st.markdown("### Feature importance over time for Jamming model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_jamming/jamming_event_shap_values.csv"
+            "reports/figures/jamming_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -974,8 +974,8 @@ def page_jamming():
             )
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_jamming/jamming_event_heatmap.png")
-            cont_img = load_image_path("artifacts_jamming/jamming_continuous_heatmap.png")
+            event_img = load_image_path("reports/figures/jamming_event_heatmap.png")
+            cont_img = load_image_path("reports/figures/jamming_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Jamming – SHAP heatmap around a suspected event", use_container_width=True)
             if cont_img:
@@ -992,7 +992,7 @@ def page_jamming():
         lit_expander("jamming")
 
     with col_side:
-        events = load_csv("artifacts_jamming/test_eventized_scores.csv", parse_dates=["t_start", "t_end"])
+        events = load_csv("data/processed/jam_test_eventized_scores.csv", parse_dates=["t_start", "t_end"])
         alerts_df = None
         if events is not None:
             events["time_center"] = events["t_start"]
@@ -1045,7 +1045,7 @@ def page_sla():
 
     with col_main:
         st.markdown("#### SLA thresholds and breaches")
-        sla_df = load_csv("artifacts_sla/sla_breach_events.csv", parse_dates=["start", "end"])
+        sla_df = load_csv("data/processed/sla_breach_events.csv", parse_dates=["start", "end"])
         if sla_df is not None:
             sla_df = apply_time_filter(sla_df, "start")
             if not sla_df.empty:
@@ -1061,12 +1061,12 @@ def page_sla():
             else:
                 st.info("No SLA breaches in this filtered window – system healthy.")
         else:
-            st.info("No SLA breach CSV found in artifacts_sla/. Showing explanations only.")
+            st.info("No SLA breach CSV found in data/processed/sla_. Showing explanations only.")
 
         st.markdown("#### Feature importance over time for SLA risk model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_sla/sla_event_shap_values.csv"
+            "data/processed/sla_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1082,8 +1082,8 @@ def page_sla():
             fig_shap = add_shap_hover(fig_shap, x_label="time step", y_label="feature")
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_sla/sla_event_heatmap.png")
-            cont_img = load_image_path("artifacts_sla/sla_continuous_heatmap.png")
+            event_img = load_image_path("reports/figures/sla_event_heatmap.png")
+            cont_img = load_image_path("reports/figures/sla_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="SLA – SHAP heatmap around one breach", use_container_width=True)
             if cont_img:
@@ -1114,7 +1114,7 @@ def page_sla():
             )
             st.info("Simulated high-risk SLA window added to the alert list.")
 
-        sla_df = load_csv("artifacts_sla/sla_breach_events.csv", parse_dates=["start", "end"])
+        sla_df = load_csv("data/processed/sla_breach_events.csv", parse_dates=["start", "end"])
         alerts_df = None
         if sla_df is not None:
             sla_df = apply_time_filter(sla_df, "start")
@@ -1181,7 +1181,7 @@ def page_handover():
     with col_main:
         st.markdown("### Feature importance over time for Handover model (SHAP values)")
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_handover/handover_event_shap_values.csv"
+            "reports/figures/handover_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1197,8 +1197,8 @@ def page_handover():
             fig_shap = add_shap_hover(fig_shap, x_label="time step", y_label="feature")
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_handover/handover_event_heatmap.png")
-            cont_img = load_image_path("artifacts_handover/handover_continuous_heatmap.png")
+            event_img = load_image_path("reports/figures/handover_event_heatmap.png")
+            cont_img = load_image_path("reports/figures/handover_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Beam Handover – SHAP heatmap around one anomalous handover", use_container_width=True)
             if cont_img:
@@ -1215,7 +1215,7 @@ def page_handover():
         lit_expander("handover")
 
     with col_side:
-        events = load_csv("artifacts_handover/handover_table.csv", parse_dates=["t"])
+        events = load_csv("data/processed/handover_table.csv", parse_dates=["t"])
         alerts_df = None
         if events is not None:
             events = events.tail(200)
@@ -1293,7 +1293,7 @@ def page_space_weather():
     with col_main:
         st.markdown("### Feature importance over time for Space Weather maneuver model (SHAP values)")
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "artifacts_spaceweather/spaceweather_risky_shap_values.csv"
+            "reports/figures/spaceweather_risky_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
@@ -1314,8 +1314,8 @@ def page_space_weather():
             )
             st.plotly_chart(fig_shap, use_container_width=True)
         else:
-            event_img = load_image_path("artifacts_spaceweather/spaceweather_risky_heatmap.png")
-            cont_img = load_image_path("artifacts_spaceweather/spaceweather_continuous_heatmap.png")
+            event_img = load_image_path("reports/figures/spaceweather_risky_heatmap.png")
+            cont_img = load_image_path("reports/figures/spaceweather_continuous_heatmap.png")
             if event_img:
                 st.image(event_img, caption="Space Weather – SHAP heatmap for top risky maneuvers", use_container_width=True)
             if cont_img:
@@ -1416,7 +1416,7 @@ def page_capacity():
     st.caption("Synthetic data; real SES metrics are discussed in the thesis evaluation chapter.")
     lit_expander("capacity")
 
-    df = load_csv("artifacts_capacity/capacity_risk_demo.csv", parse_dates=["time"])
+    df = load_csv("data/processed/capacity_risk_demo.csv", parse_dates=["time"])
     if df is None or df.empty:        df = synth_capacity_demo()
 
     df = apply_time_filter(df, "time")
@@ -1538,7 +1538,7 @@ def page_stress():
     )
     lit_expander("stress")
 
-    df = load_csv("artifacts_stress/stress_index_demo.csv", parse_dates=["time"])
+    df = load_csv("data/processed/stress_index_demo.csv", parse_dates=["time"])
     if df is None or df.empty:        df = synth_stress_demo()
 
     df = apply_time_filter(df, "time")
