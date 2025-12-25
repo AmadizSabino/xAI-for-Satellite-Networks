@@ -311,16 +311,25 @@ def get_time_window_hours():
     return None
 
 def apply_time_filter(df: pd.DataFrame | None, time_col: str):
+    if df is None or df.empty:
+        return df
+    if time_col not in df.columns:
+        return df
+
     df = df.copy()
     df[time_col] = pd.to_datetime(df[time_col], errors="coerce", utc=True)
+
     hours = get_time_window_hours()
-    if df is None or hours is None or time_col not in df.columns:
+    if hours is None:
         return df
+
     latest_time = df[time_col].max()
     if pd.isna(latest_time):
         return df
+
     window_start = latest_time - pd.Timedelta(hours=hours)
     return df[df[time_col].between(window_start, latest_time)].copy()
+
 
 # ==========================================================
 # Thesis branding
@@ -380,7 +389,13 @@ def add_shap_hover(fig, x_label="time", y_label="feature", context_note=None):
 # ==========================================================
 # Alerts rendering + button CSS
 # ==========================================================
+
 def render_alerts(df, id_col, time_col, severity_col, title, usecase_key, max_rows=3):
+    
+    if df is not None and time_col in df.columns:
+    df = df.copy()
+    df[time_col] = pd.to_datetime(df[time_col], errors="coerce", utc=True)
+
     st.markdown(f"### {title}")
 
     # Button style
@@ -1507,21 +1522,20 @@ def page_feedback_analytics():
         "useful": int(fb["feedback"].str.contains("useful", case=False).sum()),
     }
 
-    sentiment_available = False
+    #sentiment_available = False
 
     def safe_polarity(text: str) -> float | None:
-    try:
-        from textblob import TextBlob
-        return float(TextBlob(text).sentiment.polarity)
-    except Exception:
-        return None
+        try:
+            from textblob import TextBlob  # noqa: F401
+            sentiment_available = True
+        except Exception:
+            sentiment_available = False
+        
+        if sentiment_available:
+            fb["sentiment_polarity"] = fb["feedback"].apply(lambda x: safe_polarity(x))
+        else:
+            fb["sentiment_polarity"] = np.nan
 
-    try:
-        fb["sentiment_polarity"] = fb["feedback"].apply(lambda x: safe_polarity(x))
-        sentiment_available = True
-    except Exception:
-        fb["sentiment_polarity"] = np.nan
-        sentiment_available = False
 
     avg_polarity = None
     if sentiment_available:
