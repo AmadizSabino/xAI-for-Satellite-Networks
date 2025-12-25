@@ -49,14 +49,17 @@ and evaluation are performed offline in the notebooks.
 
 ### 1. Create and activate a virtual environment (recommended)
 
-```bash
+```bash´´´
 python -m venv venv
 source venv/bin/activate   # Linux / macOS
 # venv\Scripts\activate    # Windows
 
-### 2. Install dependencies
+---
+  
+## 2. Instal Dependecies and Runs streamlit the dashboard
 
-```bash
+### 2. Install dependencies
+```bash```
 pip install -r requirements.txt
 
 streamlit run app.py
