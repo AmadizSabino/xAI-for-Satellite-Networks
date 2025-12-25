@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
 ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
 #ALERTS_CSV = BASE_DIR / "alerts_history.csv"
-###Apagar a frase em cima
+
 
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
 THESIS_URL = "https://your-thesis-link"
