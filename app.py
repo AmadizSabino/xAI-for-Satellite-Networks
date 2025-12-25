@@ -902,6 +902,9 @@ def page_signal_loss():
                 ),
             )
             st.plotly_chart(fig_shap, use_container_width=True)
+
+            xai_caveat("anomaly model") 
+        
         else:
             event_img = load_image_path("reports/figures/signal_loss_event_heatmap.png")
             cont_img = load_image_path("reports/figures/signal_loss_continuous_heatmap.png")
@@ -1169,6 +1172,9 @@ def page_sla():
             )
             fig_shap = add_shap_hover(fig_shap, x_label="time step", y_label="feature")
             st.plotly_chart(fig_shap, use_container_width=True)
+
+            xai_caveat("anomaly model") 
+        
         else:
             event_img = load_image_path("reports/figures/sla_event_heatmap.png")
             cont_img = load_image_path("reports/figures/sla_continuous_heatmap.png")
