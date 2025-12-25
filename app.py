@@ -887,7 +887,7 @@ def page_signal_loss():
 
     with col_side:
         gif_url = "https://i.gifer.com/K6mM.gif"
-        st.image(gif_url, caption="Signal Loss illustration", use_container_width=True)
+        st.image(gif_url, caption="Signal Loss illustration (www.gifer.com)", use_container_width=True)
 
         events = load_csv(
             ["data/processed/sl_test_eventized_scores.csv", "data/processed/sl_test_scores.csv"],
