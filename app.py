@@ -391,10 +391,11 @@ def add_shap_hover(fig, x_label="time", y_label="feature", context_note=None):
 # ==========================================================
 
 def render_alerts(df, id_col, time_col, severity_col, title, usecase_key, max_rows=3):
-    
-    if df is not None and time_col in df.columns:
-    df = df.copy()
-    df[time_col] = pd.to_datetime(df[time_col], errors="coerce", utc=True)
+    # Ensure time column is tz-aware for consistent sorting / display
+    if df is not None and not df.empty and time_col in df.columns:
+        df = df.copy()
+        df[time_col] = pd.to_datetime(df[time_col], errors="coerce", utc=True)
+
 
     st.markdown(f"### {title}")
 
@@ -1525,34 +1526,40 @@ def page_feedback_analytics():
     #sentiment_available = False
 
     def safe_polarity(text: str) -> float | None:
+            # --- Sentiment polarity (optional; works only if TextBlob is available) ---
         try:
             from textblob import TextBlob  # noqa: F401
-            sentiment_available = True
+            textblob_available = True
         except Exception:
-            sentiment_available = False
-        
-        if sentiment_available:
-            fb["sentiment_polarity"] = fb["feedback"].apply(lambda x: safe_polarity(x))
-        else:
-            fb["sentiment_polarity"] = np.nan
+            textblob_available = False
+    
+        def safe_polarity(text: str) -> float | None:
+            if not textblob_available:
+                return None
+            try:
+                return float(TextBlob(text).sentiment.polarity)
+            except Exception:
+                return None
+    
+        fb["sentiment_polarity"] = fb["feedback"].apply(safe_polarity)
+    
+        avg_polarity = None
+        if textblob_available:
+            m = fb["sentiment_polarity"].mean()
+            if pd.notna(m):
+                avg_polarity = float(m)
 
-
-    avg_polarity = None
-    if sentiment_available:
-        m = fb["sentiment_polarity"].mean()
-        if pd.notna(m):
-            avg_polarity = float(m)
 
     with st.expander("Keyword and sentiment summary", expanded=True):
         st.json(
             {
                 "keyword_counts": keyword_counts,
-                "sentiment_available": bool(sentiment_available),
+                "sentiment_available": bool(textblob_available),
                 "average_polarity": avg_polarity,
             }
         )
 
-    if sentiment_available:
+    if textblob_available:
         st.markdown("#### Sentiment polarity distribution")
         fig_sent = px.histogram(
             fb,
