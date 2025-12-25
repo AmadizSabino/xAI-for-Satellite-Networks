@@ -216,11 +216,15 @@ LOCAL_TRANSLATIONS = {
 }
 
 @lru_cache(maxsize=4096)
-def tr(text: str) -> str:
-    lang_code = st.session_state.get("lang_code", "en")
+def tr(text: str, lang_code: str) -> str:
     if lang_code == "en":
         return text
     return LOCAL_TRANSLATIONS.get(lang_code, {}).get(text, text)
+
+# usage:
+lang = st.session_state.get("lang_code", "en")
+st.sidebar.title(tr("Anomaly Dashboard", lang))
+
 
 
 # ==========================================================
@@ -505,7 +509,7 @@ def render_alerts(df, id_col, time_col, severity_col, title, usecase_key, max_ro
                 ">{sev}</span>
               </div>
               <div style="font-size:0.8rem; margin-top:0.15rem; opacity:0.8;">
-                📡 Time: {row[time_col]}
+                Time: {row[time_col]}
               </div>
             """,
             unsafe_allow_html=True,
@@ -601,7 +605,7 @@ st.sidebar.title(tr("Anomaly Dashboard"))
 academic_mode = st.sidebar.checkbox(tr("Academic mode (show literature links)"), value=True)
 st.session_state["academic_mode"] = academic_mode
 
-lang_label = st.sidebar.selectbox(tr("Language"), list(LANG_CODES.keys()), index=0)
+lang_label = st.sidebar.selectbox(tr("Language"), list(LANG_CODES.keys()), key="lang_label")
 st.session_state["lang_code"] = LANG_CODES[lang_label]
 
 view = st.sidebar.radio(
