@@ -1504,29 +1504,26 @@ def page_feedback_analytics():
     else:
         st.info("No quantitative UX scores found (columns ux_*).")
 
-    st.markdown("### 4. Keyword and sentiment analysis of free-text feedback")
-    st.caption(
-        textwrap.dedent(
-            """
-            Sentiment polarity is computed using TextBlob when available:
-            values range from -1 (very negative) through 0 (neutral) to +1 (very positive).
-            """
+        st.markdown("### 4. Keyword and sentiment analysis of free-text feedback")
+        st.caption(
+            textwrap.dedent(
+                """
+                Sentiment polarity is computed using TextBlob when available:
+                values range from -1 (very negative) through 0 (neutral) to +1 (very positive).
+                """
+            )
         )
-    )
-
-    fb["feedback"] = fb.get("feedback", "").fillna("").astype(str)
-
-    keyword_counts = {
-        "shap": int(fb["feedback"].str.contains("shap", case=False).sum()),
-        "explain": int(fb["feedback"].str.contains("explain", case=False).sum()),
-        "confusing": int(fb["feedback"].str.contains("confus", case=False).sum()),
-        "useful": int(fb["feedback"].str.contains("useful", case=False).sum()),
-    }
-
-    #sentiment_available = False
-
-    def safe_polarity(text: str) -> float | None:
-    # --- Sentiment polarity (optional; works only if TextBlob is available) ---
+    
+        fb["feedback"] = fb.get("feedback", "").fillna("").astype(str)
+    
+        keyword_counts = {
+            "shap": int(fb["feedback"].str.contains("shap", case=False, na=False).sum()),
+            "explain": int(fb["feedback"].str.contains("explain", case=False, na=False).sum()),
+            "confusing": int(fb["feedback"].str.contains("confus", case=False, na=False).sum()),
+            "useful": int(fb["feedback"].str.contains("useful", case=False, na=False).sum()),
+        }
+    
+        # --- Sentiment polarity (optional; works only if TextBlob is available) ---
         try:
             from textblob import TextBlob
             textblob_available = True
@@ -1535,45 +1532,49 @@ def page_feedback_analytics():
             textblob_available = False
     
         def safe_polarity(text: str) -> float | None:
-            if not textblob_available or not text:
+            if not textblob_available:
+                return None
+            if text is None:
+                return None
+            t = str(text).strip()
+            if not t:
                 return None
             try:
-                return float(TextBlob(text).sentiment.polarity)
+                return float(TextBlob(t).sentiment.polarity)
             except Exception:
                 return None
     
-        fb["sentiment_polarity"] = fb["feedback"].apply(safe_polarity)
-    
-        avg_polarity = None
         if textblob_available:
+            fb["sentiment_polarity"] = fb["feedback"].apply(safe_polarity)
             m = fb["sentiment_polarity"].mean()
-            if pd.notna(m):
-                avg_polarity = float(m)
+            avg_polarity = float(m) if pd.notna(m) else None
+        else:
+            fb["sentiment_polarity"] = np.nan
+            avg_polarity = None
+    
+        with st.expander("Keyword and sentiment summary", expanded=True):
+            st.json(
+                {
+                    "keyword_counts": keyword_counts,
+                    "sentiment_available": bool(textblob_available),
+                    "average_polarity": avg_polarity,
+                }
+            )
+    
+        if textblob_available:
+            st.markdown("#### Sentiment polarity distribution")
+            fig_sent = px.histogram(
+                fb.dropna(subset=["sentiment_polarity"]),
+                x="sentiment_polarity",
+                nbins=20,
+                range_x=[-1, 1],
+                title="Distribution of feedback sentiment (TextBlob polarity)",
+            )
+            fig_sent.update_layout(margin=dict(l=0, r=0, t=40, b=0))
+            st.plotly_chart(fig_sent, use_container_width=True)
+        else:
+            st.info("TextBlob is not available in this environment; sentiment distribution plot is disabled.")
 
-
-
-    with st.expander("Keyword and sentiment summary", expanded=True):
-        st.json(
-            {
-                "keyword_counts": keyword_counts,
-                "sentiment_available": bool(textblob_available),
-                "average_polarity": avg_polarity,
-            }
-        )
-
-    if textblob_available:
-        st.markdown("#### Sentiment polarity distribution")
-        fig_sent = px.histogram(
-            fb,
-            x="sentiment_polarity",
-            nbins=20,
-            range_x=[-1, 1],
-            title="Distribution of feedback sentiment (TextBlob polarity)",
-        )
-        fig_sent.update_layout(margin=dict(l=0, r=0, t=40, b=0))
-        st.plotly_chart(fig_sent, use_container_width=True)
-    else:
-        st.info("TextBlob is not available in this environment; sentiment distribution plot is disabled.")
 
     st.markdown("### 5. Raw feedback (for thematic analysis)")
     st.dataframe(fb)
