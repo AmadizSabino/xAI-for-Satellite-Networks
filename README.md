@@ -54,3 +54,11 @@ python -m venv venv
 source venv/bin/activate   # Linux / macOS
 # venv\Scripts\activate    # Windows
 
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+
+streamlit run app.py
+
+
