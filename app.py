@@ -250,6 +250,55 @@ def load_shap_matrix(relative_path):
 
 
 
+def prepare_shap_for_heatmap(
+    shap_df: pd.DataFrame,
+    top_k: int = 20,
+    use_abs: bool = True,
+    clip_quantile: float = 0.99,
+):
+    """
+    Prepare SHAP matrix for clearer heatmap visuals:
+    - Keep only top_k features by mean magnitude
+    - Clip extremes by quantile to avoid washed-out plots
+    Returns: (df_plot, zmin, zmax)
+    """
+    if shap_df is None or shap_df.empty:
+        return shap_df, None, None
+
+    df = shap_df.copy()
+
+    if use_abs:
+        df = df.abs()
+
+    # rank features by mean importance over time
+    if top_k is not None and top_k > 0 and len(df.index) > top_k:
+        ranks = df.mean(axis=1).sort_values(ascending=False)
+        keep = ranks.head(top_k).index
+        df = df.loc[keep]
+
+    # robust clipping for colorscale
+    vals = df.to_numpy().ravel()
+    vals = vals[~np.isnan(vals)]
+    if vals.size == 0:
+        return df, None, None
+
+    if use_abs:
+        zmax = float(np.quantile(vals, clip_quantile))
+        zmin = 0.0
+    else:
+        # symmetric clipping around 0 for diverging scale
+        q = float(np.quantile(np.abs(vals), clip_quantile))
+        zmax = q
+        zmin = -q
+
+    # avoid degenerate scale
+    if zmax == 0:
+        zmax = float(vals.max()) if float(vals.max()) > 0 else 1.0
+        zmin = 0.0 if use_abs else -zmax
+
+    return df, zmin, zmax
+
+
 # ------------------------------
 # Alerts helpers
 # ------------------------------
