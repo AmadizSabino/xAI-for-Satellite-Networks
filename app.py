@@ -45,7 +45,7 @@ ALERT_HISTORY_CSV = PROCESSED_DIR / "dashboard_alert_history.csv"
 ALERTS_CSV = PROCESSED_DIR / "alerts_history.csv"
 
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
-THESIS_URL = "https://your-thesis-link"  # keep placeholder
+THESIS_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks/tree/main/ThesisReport"
 
 # ==========================================================
 # Robust IO helpers (MUST be defined before any reads)
@@ -220,8 +220,8 @@ def tr(text: str) -> str:
     lang_code = st.session_state.get("lang_code", "en")
     if lang_code == "en":
         return text
-    mapping = LOCAL_TRANSLATIONS.get(lang_code, {})
-    return mapping.get(text, text)
+    return LOCAL_TRANSLATIONS.get(lang_code, {}).get(text, text)
+
 
 # ==========================================================
 # Literature notes (Academic mode)
@@ -1526,15 +1526,16 @@ def page_feedback_analytics():
     #sentiment_available = False
 
     def safe_polarity(text: str) -> float | None:
-            # --- Sentiment polarity (optional; works only if TextBlob is available) ---
+    # --- Sentiment polarity (optional; works only if TextBlob is available) ---
         try:
-            from textblob import TextBlob  # noqa: F401
+            from textblob import TextBlob
             textblob_available = True
         except Exception:
+            TextBlob = None
             textblob_available = False
     
         def safe_polarity(text: str) -> float | None:
-            if not textblob_available:
+            if not textblob_available or not text:
                 return None
             try:
                 return float(TextBlob(text).sentiment.polarity)
@@ -1548,6 +1549,7 @@ def page_feedback_analytics():
             m = fb["sentiment_polarity"].mean()
             if pd.notna(m):
                 avg_polarity = float(m)
+
 
 
     with st.expander("Keyword and sentiment summary", expanded=True):
