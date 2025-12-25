@@ -1058,9 +1058,7 @@ def page_jamming():
                 "during the selected window. It is model-faithful (not causal), and correlated modem metrics may share "
                 "importance across several rows."
             )
-
-            xai_caveat("surrogate model")
-               
+             
         else:
             event_img = load_image_path("reports/figures/jamming_event_heatmap.png")
             cont_img = load_image_path("reports/figures/jamming_continuous_heatmap.png")
@@ -1080,6 +1078,8 @@ def page_jamming():
         
 
         lit_expander("jamming")
+
+        xai_caveat("surrogate model")    
 
     with col_side:
         events = load_csv("data/processed/jam_test_eventized_scores.csv", parse_dates=["t_start", "t_end"])
