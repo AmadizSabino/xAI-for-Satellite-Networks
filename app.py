@@ -865,7 +865,7 @@ def page_signal_loss():
         lit_expander("signal_loss")
 
         st.markdown("#### Example anomaly-score trend")
-        scores = load_csv("artifacts_signal_loss/test_scores_raw.csv", parse_dates=["timestamp"])
+        scores = load_csv("data/processed/test_scores_raw.csv", parse_dates=["timestamp"])
         if scores is not None:
             if "timestamp" in scores.columns:
                 scores = scores.rename(columns={"timestamp": "time"})
