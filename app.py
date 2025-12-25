@@ -14,16 +14,16 @@ import textwrap
 # Paths and global constants
 # ------------------------------
 
-#BASE_DIR = Path(__file__).resolve().parent.parent
-#FEEDBACK_CSV = BASE_DIR / "dashboard_feedback.csv"
-#ALERT_HISTORY_CSV = BASE_DIR / "dashboard_alert_history.csv"
-#ALERTS_CSV = BASE_DIR / "alerts_history.csv"
-
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
+DATA_DIR = BASE_DIR / "data" / "processed"
 
 FEEDBACK_CSV = DATA_DIR / "dashboard_feedback.csv"
 ALERT_HISTORY_CSV = DATA_DIR / "dashboard_alert_history.csv"
+
+if not DATA_DIR.exists():
+    st.error(f"Data directory not found: {DATA_DIR}")
+    st.stop()
+
 
 # ==========================================================
 # Github repo
@@ -48,7 +48,6 @@ if FEEDBACK_CSV.exists():
     feedback_df = pd.read_csv(FEEDBACK_CSV)
 else:
     feedback_df = pd.DataFrame(columns=["feedback"])
-
 
 # ------------------------------
 # Translation engine (local dictionaries)
