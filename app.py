@@ -300,7 +300,7 @@ def prepare_shap_for_heatmap(
 
 def xai_caveat(model_type: str = "model"):
     st.caption(
-        f"Interpretation caveat: Explanations describe how the {model_type} produced the displayed risk/score. "
+        f"Interpretation note: Explanations describe how the {model_type} produced the displayed risk/score. "
         "They do not prove physical causality. When telemetry features are correlated, importance may be distributed "
         "across multiple channels rather than concentrated in a single row."
     )
