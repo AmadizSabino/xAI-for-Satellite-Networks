@@ -1066,7 +1066,7 @@ def page_sla():
         st.markdown("#### Feature importance over time for SLA risk model (SHAP values)")
 
         shap_df, feat_names, time_labels = load_shap_matrix(
-            "data/processed/sla_event_shap_values.csv"
+            "reports/figures/sla_event_shap_values.csv"
         )
         if shap_df is not None:
             fig_shap = px.imshow(
