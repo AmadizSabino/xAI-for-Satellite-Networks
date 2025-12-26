@@ -2039,6 +2039,9 @@ def page_alert_analytics():
     st.write("TTA stats (seconds):", alerts["time_to_ack_s"].describe())
     st.write("Count TTA > 7 days:", (alerts["time_to_ack_s"] > 7*24*3600).sum())
 
+    MAX_TTA_S = 365 * 24 * 3600   # 1 year 
+    
+    acked_valid = acked_valid[(acked_valid["time_to_ack_s"] >= 0) & (acked_valid["time_to_ack_s"] <= MAX_TTA_S)]
 
     if acked_valid.empty or "severity" not in acked_valid.columns:
         st.info("Not enough acknowledged alerts with severity to plot time-to-ack distribution.")
