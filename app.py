@@ -30,7 +30,7 @@ if not DATA_DIR.exists():
 # ==========================================================
 
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
-THESIS_URL = "https://your-thesis-link"
+THESIS_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks/ThesisReport"
 
 # ==========================================================
 # File existence guards 
