@@ -2068,8 +2068,7 @@ def page_alert_analytics():
         st.markdown(" - In this prototype, alerts may refer to historical events; therefore time-to-ack reflects elapsed time between event timestamp and user acknowledgement, not real operational response latency.")
         st.markdown(" - Absolute time-to-acknowledgement values reflect historical event timestamps rather than real-time alert creation.")
         st.markdown(" - Outliers correspond to differences in event age rather than delayed operator response.")
-                    "
-                   )
+
     # -----------------------------
     # Before / after threshold comparison
     # -----------------------------
