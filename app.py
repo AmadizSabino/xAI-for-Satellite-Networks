@@ -2064,9 +2064,11 @@ def page_alert_analytics():
             "In Phase 4 this supports the alert-fatigue / actionability analysis."
         )
         
-        st.markdown("Note 1: In this prototype, alerts may refer to historical events; therefore time-to-ack reflects elapsed time between event timestamp and user acknowledgement, not real operational response latency.")
-                    "Absolute time-to-acknowledgement values reflect historical event timestamps rather than real-time alert creation." 
-                    "Outliers correspond to differences in event age rather than delayed operator response."
+        st.markdown("""Note: 
+                       - In this prototype, alerts may refer to historical events; therefore time-to-ack reflects elapsed time between event timestamp and user acknowledgement, not real operational response latency.
+                       - Absolute time-to-acknowledgement values reflect historical event timestamps rather than real-time alert creation.
+                       - Outliers correspond to differences in event age rather than delayed operator response.
+                    """
                    )
     # -----------------------------
     # Before / after threshold comparison
