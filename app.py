@@ -2059,12 +2059,15 @@ def page_alert_analytics():
         fig_box.update_layout(margin=dict(l=0, r=0, t=40, b=0))
         st.plotly_chart(fig_box, use_container_width=True)
         st.caption(
-            "Interpretation: Lower medians and tighter spreads indicate faster, more actionable alerts. "
+            "Interpretation: This visualisation demonstrates the ability of the prototype to compute, stratify, and visualise acknowledgement-related metrics by alert severity."
+            "In the current prototype configuration, absolute time-to-acknowledgement values are dominated by historical event timestamps; therefore, the plot should be interpreted as a structural illustration of alert analytics rather than as evidence of real operational response performance."
             "In Phase 4 this supports the alert-fatigue / actionability analysis."
         )
         
         st.markdown("Note 1: In this prototype, alerts may refer to historical events; therefore time-to-ack reflects elapsed time between event timestamp and user acknowledgement, not real operational response latency.")
-        st.markdown("Note 2: Absolute time-to-acknowledgement values reflect historical event timestamps rather than real-time alert creation. Outliers correspond to differences in event age rather than delayed operator response.")
+                    "Absolute time-to-acknowledgement values reflect historical event timestamps rather than real-time alert creation." 
+                    "Outliers correspond to differences in event age rather than delayed operator response."
+                   )
     # -----------------------------
     # Before / after threshold comparison
     # -----------------------------
