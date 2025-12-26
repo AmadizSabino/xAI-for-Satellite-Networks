@@ -1,3 +1,17 @@
+##################################################################################################################################
+#                                                                                                                                #
+#                             An Explainable AI Framework for Satellite Network Anomaly Detection                                #
+#                                                                                                                                #
+#                                                                                                                                #
+#                                   *******   XAI Anomaly Detection Dashboard   *******                                          #
+#                                                                                                                                #
+#                                                                                                                                #
+#                                                    University of Hull                                                          #
+#                                                MSc Artificial Intelligence                                                     #
+#                                                                                                                                #
+#                                                      Amadiz Sabino                                                             #
+#                                                                                                                                #
+##################################################################################################################################
 
 import streamlit as st
 import pandas as pd
