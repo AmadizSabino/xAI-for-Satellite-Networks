@@ -2119,10 +2119,9 @@ def page_alert_analytics():
         st.plotly_chart(fig_tta, use_container_width=True)
 
     st.caption(
-        "This comparison demonstrates the operational trade-off between alert volume "
-        "and actionability. Precision-first settings typically reduce alert load while "
-        "improving acknowledgement rates and response times."
-    )
+        "This section is designed to compare alert behaviour across different threshold regimes (e.g. precision-first vs recall-first)."
+        "In the current prototype, explicit threshold version tags were not enabled during alert generation; therefore, this comparison is shown as a structural placeholder illustrating how such analyses would be performed in a production setting."
+              )
 
     st.download_button("Download alert history CSV", data=alerts.to_csv(index=False), file_name="alert_history.csv")
     render_thesis_footer()
