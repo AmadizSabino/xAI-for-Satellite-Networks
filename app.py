@@ -2034,7 +2034,7 @@ def page_alert_analytics():
     # Optional cap to keep plot readable; adjust as needed
     #acked_valid = acked_valid[(acked_valid["time_to_ack_s"] >= 0) & (acked_valid["time_to_ack_s"] <= 7 * 24 * 3600)]
 
-    MAX_TTA_S = 365 * 24 * 3600   # 1 year 
+    MAX_TTA_S = 5 * 365 * 24 * 3600   # 1 year 
     
     acked_valid = acked_valid[(acked_valid["time_to_ack_s"] >= 0) & (acked_valid["time_to_ack_s"] <= MAX_TTA_S)]
     
@@ -2062,7 +2062,8 @@ def page_alert_analytics():
             "Interpretation: Lower medians and tighter spreads indicate faster, more actionable alerts. "
             "In Phase 4 this supports the alert-fatigue / actionability analysis."
         )
-
+        
+        st.markdown("Note: In this prototype, alerts may refer to historical events; therefore time-to-ack reflects elapsed time between event timestamp and user acknowledgement, not real operational response latency.")
     # -----------------------------
     # Before / after threshold comparison
     # -----------------------------
