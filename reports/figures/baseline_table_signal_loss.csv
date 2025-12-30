@@ -1,0 +1,3 @@
+Method,PR-AUC,ROC-AUC,Precision,Recall,Notes
+Rule threshold (99th pct),1.0,1.0,1.0,0.03372545299307466,Simple threshold on model score (proxy for rule-based monitoring)
+Isolation Forest (no XAI),1.0,1.0,1.0,1.0,Model-only baseline without explainability
