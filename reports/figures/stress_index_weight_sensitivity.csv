@@ -1,0 +1,6 @@
+Perturbation,Spearman_rho,p_value
++20% weight on jamming_risk,0.9999294736485433,0.0
++20% weight on capacity_risk,0.9999299419611203,0.0
++20% weight on handover_risk,0.9999829593620917,0.0
++20% weight on sla_risk,0.9999970865807292,0.0
++20% weight on loss_risk,1.0,0.0
