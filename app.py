@@ -44,7 +44,7 @@ if not DATA_DIR.exists():
 # ==========================================================
 
 CODE_REPO_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks"
-THESIS_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks/ThesisReport"
+THESIS_URL = "https://github.com/AmadizSabino/xAI-for-Satellite-Networks/ThesisReport" # In Canvas only as the file is too large for my repo
 
 # ==========================================================
 # File existence guards 
