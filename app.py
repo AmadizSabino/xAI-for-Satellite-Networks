@@ -483,7 +483,7 @@ def render_alerts(df, id_col, time_col, severity_col, title, usecase_key, max_ro
         demo = pd.DataFrame(
             {
                 id_col: [f"ALERT-{usecase_key.upper()}-{i+1}" for i in range(3)],
-                time_col: pd.date_range("2021-11-01", periods=3, freq="H", tz="UTC"),
+                time_col: pd.date_range("2021-11-01", periods=3, freq="h", tz="UTC"),
                 severity_col: ["high", "medium", "medium"],
             }
         )
@@ -1495,7 +1495,7 @@ def page_space_weather():
 # ------------------------------
 
 def synth_capacity_demo():
-    idx = pd.date_range("2021-10-25", "2021-11-01", freq="H")
+    idx = pd.date_range("2021-10-25", "2021-11-01", freq="h")
     beams = ["Beam-A", "Beam-B", "Beam-C"]
     rows = []
     rng = np.random.default_rng(42)
@@ -1619,7 +1619,7 @@ def page_capacity():
 # ------------------------------
 
 def synth_stress_demo():
-    idx = pd.date_range("2021-10-25", "2021-11-01", freq="H")
+    idx = pd.date_range("2021-10-25", "2021-11-01", freq="h")
     rng = np.random.default_rng(123)
     df = pd.DataFrame({"time": idx})
     df["signal_loss_risk"] = rng.uniform(0, 0.6, len(idx))
